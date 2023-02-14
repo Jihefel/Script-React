@@ -340,10 +340,10 @@ if [[ $bootstrap == "y" ]]; then
 
     case $styleType in
     a)
-      echo "@import ~bootstrap/scss/bootstrap" >>.src/_app.sass
+      echo "@import ~bootstrap/scss/bootstrap" >>./src/_app.sass
       ;;
     s)
-      echo "@import '~bootstrap/scss/bootstrap';" >>.src/_app.scss
+      echo "@import '~bootstrap/scss/bootstrap';" >>./src/_app.scss
       ;;
     c)
       sed -i "3i\import '~bootstrap/dist/css/bootstrap.min.css';" ./src/index.js
@@ -376,21 +376,21 @@ if [[ $bootstrap == "y" ]]; then
     a)
       touch ./src/sass/vendors/_bootstrap.sass
 
-      echo -e "@import ~bootstrap/scss/bootstrap\n@import ~bootstrap/scss/_functions.scss\n@import ~bootstrap/scss/_variables.scss" >>./src/sass/vendors/_bootstrap.sass
+      echo -e "@import ~bootstrap/scss/bootstrap\n" >>./src/sass/vendors/_bootstrap.sass
 
-      sed -i '3i\//Bootstrap\n@import ./vendors/_bootstrap\' ./src/sass/main.sass
+      echo -e "@import ./vendors/_bootstrap" >> ./src/sass/main.sass
 
-      echo -e "// COLORS Sass\n\$lightgrey: #dddddd\n\n// COLORS Bootstrap\n\$custom-colors: ('lightgrey': #dddddd)\n\n// Merge the maps\n\$theme-colors: map-merge(\$theme-colors, \$custom-colors)" >./src/sass/utilities/_variables.sass
+      echo -e "@import ~bootstrap/scss/_functions.scss\n@import ~bootstrap/scss/_variables.scss\n\n// COLORS Sass\n\$lightgrey: #dddddd\n\n// COLORS Bootstrap\n\$custom-colors: ('lightgrey': #dddddd)\n\n// Merge the maps\n\$theme-colors: map-merge(\$theme-colors, \$custom-colors)" >./src/sass/utilities/_variables.sass
 
       ;;
     s)
       touch ./src/sass/vendors/_bootstrap.scss
 
-      echo -e "@import '~bootstrap/scss/bootstrap';\n@import '~bootstrap/scss/_functions.scss';\n@import '~bootstrap/scss/_variables.scss';" >>./src/sass/vendors/_bootstrap.scss
+      echo -e "@import '~bootstrap/scss/bootstrap';\n" >>./src/sass/vendors/_bootstrap.scss
 
-      sed -i "3i\//Bootstrap\n@import './vendors/_bootstrap';" ./src/sass/main.scss
+      echo -e "@import './vendors/_bootstrap';" >> ./src/sass/main.scss
 
-      echo -e "// COLORS Sass\n\$lightgrey: #dddddd;\n\n// COLORS Bootstrap\n\$custom-colors: ('lightgrey': #dddddd);\n\n// Merge the maps\n\$theme-colors: map-merge(\$theme-colors, \$custom-colors);" >./src/sass/utilities/_variables.scss
+      echo -e "@import '~bootstrap/scss/_functions.scss';\n@import '~bootstrap/scss/_variables.scss';\n\n// COLORS Sass\n\$lightgrey: #dddddd;\n\n// COLORS Bootstrap\n\$custom-colors: ('lightgrey': #dddddd);\n\n// Merge the maps\n\$theme-colors: map-merge(\$theme-colors, \$custom-colors);" >./src/sass/utilities/_variables.scss
 
       ;;
     *)
