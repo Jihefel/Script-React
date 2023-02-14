@@ -40,9 +40,13 @@ compName=$(echo $compName | xargs)
 compName_lowercase="$(echo "$compName" | tr '[:upper:]' '[:lower:]')"
 compName_sass="_${compName_lowercase}"
 
-# Font Awesome
-echo "Besoin de Font Awesome ? (y)"
-read fontAwesome
+# # Font Awesome
+# echo "Besoin de Font Awesome ? (y)"
+# read fontAwesome
+
+# React Icons
+echo "Besoin de React Icons ? (y)"
+read reactIcons
 
 # Font Awesome
 echo "Besoin de Bootstrap ? (y)"
@@ -266,7 +270,7 @@ elif [[ $structureSass == "2" ]]; then
     importScss >>./src/sass/main.scss
     variablesScss >>./src/sass/_variables.scss
     echo -e "// Utilisez ce fichier pour les imports de vos modules\n@import './${compName_sass}';" >>./src/sass/modules/_imports.scss
-    
+
     ;;
   *)
     echo "Erreur dans la création des fichiers modules pour SASS"
@@ -328,9 +332,14 @@ EOF
 }
 textHTML >>./public/index.html
 
-# Font Awesome
-if [[ $fontAwesome == "y" ]]; then
-  npm i -S @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/free-regular-svg-icons @fortawesome/free-brands-svg-icons @fortawesome/react-fontawesome@latest
+# # Font Awesome
+# if [[ $fontAwesome == "y" ]]; then
+#   npm i -S @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/free-regular-svg-icons @fortawesome/free-brands-svg-icons @fortawesome/react-fontawesome@latest
+# fi
+
+# React Icons
+if [[ $reactIcons == "y" ]]; then
+  npm install react-icons --save
 fi
 
 # BootStrap
@@ -360,11 +369,11 @@ if [[ $bootstrap == "y" ]]; then
     case $styleType in
     a)
       echo -e "@import ~bootstrap/scss/_functions.scss\n@import ~bootstrap/scss/_variables.scss\n\n// COLORS Sass\n\$lightgrey: #dddddd\n\n// COLORS Bootstrap\n\$custom-colors: ('lightgrey': #dddddd)\n\n// Merge the maps\n\$theme-colors: map-merge(\$theme-colors, \$custom-colors)" >./src/sass/_variables.sass
-      echo -e "// Bootstrap\n@import ~bootstrap/scss/bootstrap" >> ./src/sass/main.sass
+      echo -e "// Bootstrap\n@import ~bootstrap/scss/bootstrap" >>./src/sass/main.sass
       ;;
     s)
       echo -e "@import '~bootstrap/scss/_functions.scss';\n@import '~bootstrap/scss/_variables.scss';\n\n// COLORS Sass\n\$lightgrey: #dddddd;\n\n// COLORS Bootstrap\n\$custom-colors: ('lightgrey': #dddddd);\n\n// Merge the maps\n\$theme-colors: map-merge(\$theme-colors, \$custom-colors);" >./src/sass/_variables.scss
-      echo -e "// Bootstrap\n@import '~bootstrap/scss/bootstrap';" >> ./src/sass/main.scss
+      echo -e "// Bootstrap\n@import '~bootstrap/scss/bootstrap';" >>./src/sass/main.scss
       ;;
     *)
       echo "Erreur Bootstrap SASS"
@@ -378,7 +387,7 @@ if [[ $bootstrap == "y" ]]; then
 
       echo -e "@import ~bootstrap/scss/bootstrap\n" >>./src/sass/vendors/_bootstrap.sass
 
-      echo -e "@import ./vendors/_bootstrap" >> ./src/sass/main.sass
+      echo -e "@import ./vendors/_bootstrap" >>./src/sass/main.sass
 
       echo -e "@import ~bootstrap/scss/_functions.scss\n@import ~bootstrap/scss/_variables.scss\n\n// COLORS Sass\n\$lightgrey: #dddddd\n\n// COLORS Bootstrap\n\$custom-colors: ('lightgrey': #dddddd)\n\n// Merge the maps\n\$theme-colors: map-merge(\$theme-colors, \$custom-colors)" >./src/sass/utilities/_variables.sass
 
@@ -388,7 +397,7 @@ if [[ $bootstrap == "y" ]]; then
 
       echo -e "@import '~bootstrap/scss/bootstrap';\n" >>./src/sass/vendors/_bootstrap.scss
 
-      echo -e "@import './vendors/_bootstrap';" >> ./src/sass/main.scss
+      echo -e "@import './vendors/_bootstrap';" >>./src/sass/main.scss
 
       echo -e "@import '~bootstrap/scss/_functions.scss';\n@import '~bootstrap/scss/_variables.scss';\n\n// COLORS Sass\n\$lightgrey: #dddddd;\n\n// COLORS Bootstrap\n\$custom-colors: ('lightgrey': #dddddd);\n\n// Merge the maps\n\$theme-colors: map-merge(\$theme-colors, \$custom-colors);" >./src/sass/utilities/_variables.scss
 
@@ -400,14 +409,12 @@ if [[ $bootstrap == "y" ]]; then
   fi
 fi
 
-
-
 # TailWind
 if [[ $tailwind == "y" ]]; then
   npm install -D tailwindcss
   npx tailwindcss init
 
-# Modification du JSON de Tailwind
+  # Modification du JSON de Tailwind
   function tailwindJs {
     cat <<EOF
 /** @type {import('tailwindcss').Config} */
@@ -424,10 +431,10 @@ EOF
   }
   tailwindJs >./tailwind.config.js
 
-# Si bootstrap et tailwind
+  # Si bootstrap et tailwind
   if [[ $tailwind == "y" && $bootstrap == "y" ]]; then
-   function tailwindJsWithBootstrap {
-    cat <<EOF
+    function tailwindJsWithBootstrap {
+      cat <<EOF
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -443,8 +450,8 @@ module.exports = {
   plugins: [],
 };
 EOF
-  }
-  tailwindJsWithBootstrap >./tailwind.config.js
+    }
+    tailwindJsWithBootstrap >./tailwind.config.js
   fi
 
   if [[ $structureSass == "1" ]]; then
@@ -457,7 +464,7 @@ EOF
     s)
       echo -e "// Tailwind\n@tailwind base;\n@tailwind components;\n@tailwind utilities;" >>./src/_index.scss
       ;;
-      
+
     c)
       echo -e "/* Tailwind */\n@tailwind base;\n@tailwind components;\n@tailwind utilities;" >>./src/index.css
       ;;
@@ -499,32 +506,31 @@ EOF
   fi
 fi
 
-
 # Fin
 if [[ $structureSass == "2" ]]; then
 
   case $styleType in
-  a) 
-    echo -e "// Imports\n@import ./modules/_imports" >> ./src/sass/main.sass
+  a)
+    echo -e "// Imports\n@import ./modules/_imports" >>./src/sass/main.sass
     ;;
 
-  s) 
-    echo -e "// Imports\n@import './modules/_imports';" >> ./src/sass/main.scss
+  s)
+    echo -e "// Imports\n@import './modules/_imports';" >>./src/sass/main.scss
     ;;
 
-    *)
+  *)
     echo "Erreur "
     ;;
   esac
 elif [[ $structureSass == "3" ]]; then
 
   case $styleType in
-  a) 
-    echo -e "// Imports\n@import ./base/_imports" >> ./src/sass/main.sass
+  a)
+    echo -e "// Imports\n@import ./base/_imports" >>./src/sass/main.sass
     ;;
 
-  s) 
-    echo -e "// Imports\n@import './base/_imports';" >> ./src/sass/main.scss
+  s)
+    echo -e "// Imports\n@import './base/_imports';" >>./src/sass/main.scss
     ;;
 
   *)
