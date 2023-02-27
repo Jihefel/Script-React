@@ -542,6 +542,9 @@ elif [[ $structureSass == "3" ]]; then
   esac
 fi
 
+# Installation de React Router
+npm i react-router-dom
+
 # Lancement de l'app
 echo "LANCEMENT DE L'APP REACT. BON TRAVAIL !"
 npm start
