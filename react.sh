@@ -66,20 +66,20 @@ cd $appName
 rm -rf ./src/*
 
 # Ajout des fichiers indispensables
-mkdir -p ./src/components/$compName/
-touch ./src/{App.js,index.js} ./src/components/$compName/$compName.js
+mkdir -p ./src/components/
+touch ./src/{App.js,index.js} ./src/components/$compName.js
 
 # Ajouter des fichiers App et index.sass
 function touchSass {
   touch $1{_app.$2,_index.$2}
-  touch ./src/components/$compName/$compName_sass.$2
+  touch ./src/components/$compName_sass.$2
 }
 
 # Texte dans App1.js
 function textApp1 {
   cat <<EOF
 import './$2.$1';
-import $compName from './components/$compName/$compName';
+import $compName from './components/$compName';
 
 function App() {
   return (
@@ -96,7 +96,7 @@ EOF
 # Texte dans App3.js
 function textApp2 {
   cat <<EOF
-import $compName from './components/$compName/$compName';
+import $compName from './components/$compName';
 
 function App() {
   return (
@@ -233,20 +233,20 @@ if [[ $structureSass == "1" ]]; then
     touchSass ./src/ sass
     textApp1 sass _app >>./src/App.js
     textIndex1 ./_index sass >>./src/index.js
-    textComp1 $compName_sass sass >>./src/components/$compName/$compName.js
+    textComp1 $compName_sass sass >>./src/components/$compName.js
     ;;
   s)
     npm i sass --save-dev
     touchSass ./src/ scss
     textApp1 scss _app >>./src/App.js
     textIndex1 ./_index scss >>./src/index.js
-    textComp1 $compName_sass scss >>./src/components/$compName/$compName.js
+    textComp1 $compName_sass scss >>./src/components/$compName.js
     ;;
   c)
-    touch ./src/{App.css,index.css} ./src/components/$compName/$compName_lowercase.css
+    touch ./src/{App.css,index.css} ./src/components/$compName_lowercase.css
     textApp1 css App >>./src/App.js
     textIndex1 ./index css >>./src/index.js
-    textComp1 $compName_lowercase css >>./src/components/$compName/$compName.js
+    textComp1 $compName_lowercase css >>./src/components/$compName.js
     ;;
   *)
     echo "Erreur dans le type de fichier de style désiré"
@@ -260,7 +260,7 @@ elif [[ $structureSass == "2" ]]; then
     touch ./src/sass/modules/_imports.sass ./src/sass/_fonts.sass ./src/sass/main.sass ./src/sass/_variables.sass ./src/sass/modules/$compName_sass.sass
     textApp2 >>./src/App.js
     textIndex1 ./sass/main sass >>./src/index.js
-    textComp2 >>./src/components/$compName/$compName.js
+    textComp2 >>./src/components/$compName.js
     importSass >>./src/sass/main.sass
     variablesSass >>./src/sass/_variables.sass
     echo -e "// Utilisez ce fichier pour les imports de vos modules\n@import ./${compName_sass}" >>./src/sass/modules/_imports.sass
@@ -269,7 +269,7 @@ elif [[ $structureSass == "2" ]]; then
     touch ./src/sass/modules/_imports.scss ./src/sass/_fonts.scss ./src/sass/main.scss ./src/sass/_variables.scss ./src/sass/modules/$compName_sass.scss
     textApp2 >>./src/App.js
     textIndex1 ./sass/main scss >>./src/index.js
-    textComp2 >>./src/components/$compName/$compName.js
+    textComp2 >>./src/components/$compName.js
     importScss >>./src/sass/main.scss
     variablesScss >>./src/sass/_variables.scss
     echo -e "// Utilisez ce fichier pour les imports de vos modules\n@import './${compName_sass}';" >>./src/sass/modules/_imports.scss
@@ -287,7 +287,7 @@ elif [[ $structureSass == "3" ]]; then
     touch ./src/sass/{base/{_imports.sass,_body.sass,_fonts.sass},components/$compName_sass.sass,utilities/{_variables.sass,_mixins.sass}}
     textApp2 >>./src/App.js
     textIndex1 ./sass/main sass >>./src/index.js
-    textComp2 >>./src/components/$compName/$compName.js
+    textComp2 >>./src/components/$compName.js
     importSass7 >>./src/sass/main.sass
     variablesSass >>./src/sass/utilities/_variables.sass
     echo -e "// Utilisez ce fichier pour les imports globaux\n@import ../components/${compName_sass}" >>./src/sass/base/_imports.sass
@@ -296,7 +296,7 @@ elif [[ $structureSass == "3" ]]; then
     touch ./src/sass/{base/{_imports.scss,_body.scss,_fonts.scss},components/$compName_sass.scss,utilities/{_variables.scss,_mixins.scss}}
     textApp2 >>./src/App.js
     textIndex1 ./sass/main scss >>./src/index.js
-    textComp2 >>./src/components/$compName/$compName.js
+    textComp2 >>./src/components/$compName.js
     importScss7 >>./src/sass/main.scss
     variablesScss >>./src/sass/utilities/_variables.scss
     echo -e "// Utilisez ce fichier pour les imports globaux\n@import '../components/${compName_sass}';" >>./src/sass/base/_imports.scss
