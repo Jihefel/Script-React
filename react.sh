@@ -67,19 +67,19 @@ rm -rf ./src/*
 
 # Ajout des fichiers indispensables
 mkdir -p ./src/components/
-touch ./src/{App.js,index.js} ./src/components/$compName.js
+
 
 # Ajouter des fichiers App et index.sass
 function touchSass {
   touch $1{_app.$2,_index.$2}
-  touch ./src/components/$compName_sass.$2
+  touch ./src/components/$compName/$compName_sass.$2
 }
 
 # Texte dans App1.js
 function textApp1 {
   cat <<EOF
 import './$2.$1';
-import $compName from './components/$compName';
+import $compName from './components/$compName/$compName';
 
 function App() {
   return (
@@ -226,27 +226,28 @@ EOF
 }
 
 if [[ $structureSass == "1" ]]; then
-
+  mkdir -p ./src/components/$compName
+  touch ./src/{App.js,index.js} ./src/components/$compName/$compName.js
   case $styleType in
   a)
     npm i sass --save-dev
     touchSass ./src/ sass
     textApp1 sass _app >>./src/App.js
     textIndex1 ./_index sass >>./src/index.js
-    textComp1 $compName_sass sass >>./src/components/$compName.js
+    textComp1 $compName_sass sass >>./src/components/$compName/$compName.js
     ;;
   s)
     npm i sass --save-dev
     touchSass ./src/ scss
     textApp1 scss _app >>./src/App.js
     textIndex1 ./_index scss >>./src/index.js
-    textComp1 $compName_sass scss >>./src/components/$compName.js
+    textComp1 $compName_sass scss >>./src/components/$compName/$compName.js
     ;;
   c)
-    touch ./src/{App.css,index.css} ./src/components/$compName_lowercase.css
+    touch ./src/{App.css,index.css} ./src/components/$compName/$compName_lowercase.css
     textApp1 css App >>./src/App.js
     textIndex1 ./index css >>./src/index.js
-    textComp1 $compName_lowercase css >>./src/components/$compName.js
+    textComp1 $compName_lowercase css >>./src/components/$compName/$compName.js
     ;;
   *)
     echo "Erreur dans le type de fichier de style désiré"
@@ -254,6 +255,7 @@ if [[ $structureSass == "1" ]]; then
   esac
 elif [[ $structureSass == "2" ]]; then
   mkdir -p ./src/sass/modules/
+  touch ./src/{App.js,index.js} ./src/components/$compName.js
   npm i sass --save-dev
   case $styleType in
   a)
@@ -280,6 +282,7 @@ elif [[ $structureSass == "2" ]]; then
     ;;
   esac
 elif [[ $structureSass == "3" ]]; then
+  touch ./src/{App.js,index.js} ./src/components/$compName.js
   mkdir -p ./src/{sass/{base/,components/,pages/,themes/,utilities/,vendors/},assets/{images/,fonts/,data/,audios/,videos/},pages/,models/}
   npm i sass --save-dev
   case $styleType in
