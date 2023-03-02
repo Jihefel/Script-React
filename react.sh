@@ -48,13 +48,28 @@ compName_sass="_${compName_lowercase}"
 echo "Besoin de React Icons ? (y)"
 read reactIcons
 
-# Font Awesome
+# Bootstrap
 echo "Besoin de Bootstrap ? (y)"
 read bootstrap
+# Style Bootstrap
+echo "Bootstrap normal (1) ou React Bootstrap (2) ?"
+read styleBootstrap
+while [[ $styleBootstrap != 1 && $styleBootstrap != 2 ]]; do
+  echo "Tapez '1' pour utiliser le Bootstrap normal ou '2' pour utiliser React Bootstrap"
+  read styleBootstrap
+done
 
-# Font Awesome
+# Tailwind
 echo "Besoin de TailWind ? (y)"
 read tailwind
+
+# React Router
+echo "Besoin de React Router ? (y)"
+read reactRouter
+
+# Axios
+echo "Besoin de Axios ? (y)"
+read axios
 
 # create-react-app
 npx create-react-app $appName
@@ -68,14 +83,13 @@ rm -rf ./src/*
 # Ajout des fichiers indispensables
 mkdir -p ./src/components/
 
-
 # Ajouter des fichiers App et index.sass
 function touchSass {
   touch $1{_app.$2,_index.$2}
   touch ./src/components/$compName/$compName_sass.$2
 }
 
-# Texte dans App1.js
+# Texte dans App1.jsx
 function textApp1 {
   cat <<EOF
 import './$2.$1';
@@ -93,7 +107,7 @@ export default App;
 EOF
 }
 
-# Texte dans App3.js
+# Texte dans App3.jsx
 function textApp2 {
   cat <<EOF
 import $compName from './components/$compName';
@@ -110,7 +124,7 @@ export default App;
 EOF
 }
 
-# Texte dans index.js
+# Texte dans index.jsx
 function textIndex1 {
   cat <<EOF
 import React from 'react';
@@ -227,51 +241,51 @@ EOF
 
 if [[ $structureSass == "1" ]]; then
   mkdir -p ./src/components/$compName
-  touch ./src/{App.js,index.js} ./src/components/$compName/$compName.js
+  touch ./src/{App.jsx,index.jsx} ./src/components/$compName/$compName.jsx
   case $styleType in
   a)
     npm i sass --save-dev
     touchSass ./src/ sass
-    textApp1 sass _app >>./src/App.js
-    textIndex1 ./_index sass >>./src/index.js
-    textComp1 $compName_sass sass >>./src/components/$compName/$compName.js
+    textApp1 sass _app >>./src/App.jsx
+    textIndex1 ./_index sass >>./src/index.jsx
+    textComp1 $compName_sass sass >>./src/components/$compName/$compName.jsx
     ;;
   s)
     npm i sass --save-dev
     touchSass ./src/ scss
-    textApp1 scss _app >>./src/App.js
-    textIndex1 ./_index scss >>./src/index.js
-    textComp1 $compName_sass scss >>./src/components/$compName/$compName.js
+    textApp1 scss _app >>./src/App.jsx
+    textIndex1 ./_index scss >>./src/index.jsx
+    textComp1 $compName_sass scss >>./src/components/$compName/$compName.jsx
     ;;
   c)
     touch ./src/{App.css,index.css} ./src/components/$compName/$compName_lowercase.css
-    textApp1 css App >>./src/App.js
-    textIndex1 ./index css >>./src/index.js
-    textComp1 $compName_lowercase css >>./src/components/$compName/$compName.js
+    textApp1 css App >>./src/App.jsx
+    textIndex1 ./index css >>./src/index.jsx
+    textComp1 $compName_lowercase css >>./src/components/$compName/$compName.jsx
     ;;
   *)
     echo "Erreur dans le type de fichier de style désiré"
     ;;
   esac
 elif [[ $structureSass == "2" ]]; then
-  mkdir -p ./src/sass/modules/
-  touch ./src/{App.js,index.js} ./src/components/$compName.js
+  mkdir -p ./src/{sass/modules/},pages/
+  touch ./src/{App.jsx,index.jsx} ./src/components/$compName.jsx
   npm i sass --save-dev
   case $styleType in
   a)
     touch ./src/sass/modules/_imports.sass ./src/sass/_fonts.sass ./src/sass/main.sass ./src/sass/_variables.sass ./src/sass/modules/$compName_sass.sass
-    textApp2 >>./src/App.js
-    textIndex1 ./sass/main sass >>./src/index.js
-    textComp2 >>./src/components/$compName.js
+    textApp2 >>./src/App.jsx
+    textIndex1 ./sass/main sass >>./src/index.jsx
+    textComp2 >>./src/components/$compName.jsx
     importSass >>./src/sass/main.sass
     variablesSass >>./src/sass/_variables.sass
     echo -e "// Utilisez ce fichier pour les imports de vos modules\n@import ./${compName_sass}" >>./src/sass/modules/_imports.sass
     ;;
   s)
     touch ./src/sass/modules/_imports.scss ./src/sass/_fonts.scss ./src/sass/main.scss ./src/sass/_variables.scss ./src/sass/modules/$compName_sass.scss
-    textApp2 >>./src/App.js
-    textIndex1 ./sass/main scss >>./src/index.js
-    textComp2 >>./src/components/$compName.js
+    textApp2 >>./src/App.jsx
+    textIndex1 ./sass/main scss >>./src/index.jsx
+    textComp2 >>./src/components/$compName.jsx
     importScss >>./src/sass/main.scss
     variablesScss >>./src/sass/_variables.scss
     echo -e "// Utilisez ce fichier pour les imports de vos modules\n@import './${compName_sass}';" >>./src/sass/modules/_imports.scss
@@ -282,24 +296,24 @@ elif [[ $structureSass == "2" ]]; then
     ;;
   esac
 elif [[ $structureSass == "3" ]]; then
-  touch ./src/{App.js,index.js} ./src/components/$compName.js
-  mkdir -p ./src/{sass/{base/,components/,pages/,themes/,utilities/,vendors/},assets/{images/,fonts/,data/,audios/,videos/},pages/,models/}
+  mkdir -p ./{src/sass/{base/,components/,pages/,themes/,utilities/,vendors/},src/{models/,pages/,api/}}
+  touch ./src/{App.jsx,index.jsx} ./src/components/$compName.jsx ./src/api/api.js
   npm i sass --save-dev
   case $styleType in
   a)
     touch ./src/sass/{base/{_imports.sass,_body.sass,_fonts.sass},components/$compName_sass.sass,utilities/{_variables.sass,_mixins.sass}}
-    textApp2 >>./src/App.js
-    textIndex1 ./sass/main sass >>./src/index.js
-    textComp2 >>./src/components/$compName.js
+    textApp2 >>./src/App.jsx
+    textIndex1 ./sass/main sass >>./src/index.jsx
+    textComp2 >>./src/components/$compName.jsx
     importSass7 >>./src/sass/main.sass
     variablesSass >>./src/sass/utilities/_variables.sass
     echo -e "// Utilisez ce fichier pour les imports globaux\n@import ../components/${compName_sass}" >>./src/sass/base/_imports.sass
     ;;
   s)
     touch ./src/sass/{base/{_imports.scss,_body.scss,_fonts.scss},components/$compName_sass.scss,utilities/{_variables.scss,_mixins.scss}}
-    textApp2 >>./src/App.js
-    textIndex1 ./sass/main scss >>./src/index.js
-    textComp2 >>./src/components/$compName.js
+    textApp2 >>./src/App.jsx
+    textIndex1 ./sass/main scss >>./src/index.jsx
+    textComp2 >>./src/components/$compName.jsx
     importScss7 >>./src/sass/main.scss
     variablesScss >>./src/sass/utilities/_variables.scss
     echo -e "// Utilisez ce fichier pour les imports globaux\n@import '../components/${compName_sass}';" >>./src/sass/base/_imports.scss
@@ -315,12 +329,13 @@ rm -rf public/*
 
 # Creation de l'index.html dans public
 touch ./public/index.html
+mkdir -p ./public/assets/{images/,fonts/,data/,audios/,videos/}
 
 #Texte dans l'index
 function textHTML {
   cat <<EOF
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -350,7 +365,13 @@ fi
 
 # BootStrap
 if [[ $bootstrap == "y" ]]; then
-  npm install react-bootstrap bootstrap
+  if [[ $styleBootstrap == "1" ]]; then
+    npm i bootstrap
+    sed -i "13i\<\!-- Script JS Bootstrap -->\n<script src='../node_modules/bootstrap/dist/js/bootstrap.bundle.js'></script>" ./public/index.html
+  elif [[ $styleBootstrap == "2" ]]; then
+    npm install react-bootstrap bootstrap
+  fi
+
   if [[ $structureSass == "1" ]]; then
 
     case $styleType in
@@ -361,7 +382,7 @@ if [[ $bootstrap == "y" ]]; then
       echo "@import '~bootstrap/scss/bootstrap';" >>./src/_app.scss
       ;;
     c)
-      sed -i "3i\import 'bootstrap/dist/css/bootstrap.min.css';" ./src/index.js
+      sed -i "3i\import 'bootstrap/dist/css/bootstrap.min.css';" ./src/index.jsx
       ;;
     *)
       echo "Erreur dans le type de fichier de style désiré"
@@ -369,8 +390,7 @@ if [[ $bootstrap == "y" ]]; then
     esac
 
   elif
-    [[ $structureSass == "2" ]]
-  then
+    [[ $structureSass == "2" ]]; then
 
     case $styleType in
     a)
@@ -543,10 +563,16 @@ elif [[ $structureSass == "3" ]]; then
     echo "Erreur"
     ;;
   esac
+
 fi
 
-# Installation de React Router
-npm i react-router-dom
+if [[ $reactRouter == "y" ]]; then
+  npm i react-router-dom
+fi
+
+if [[ $axios == "y" ]]; then
+  npm i axios
+fi
 
 # Lancement de l'app
 echo "LANCEMENT DE L'APP REACT. BON TRAVAIL !"
