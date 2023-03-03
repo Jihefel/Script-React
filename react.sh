@@ -52,12 +52,14 @@ read reactIcons
 echo "Besoin de Bootstrap ? (y)"
 read bootstrap
 # Style Bootstrap
-echo "Bootstrap normal (1) ou React Bootstrap (2) ?"
-read styleBootstrap
-while [[ $styleBootstrap != 1 && $styleBootstrap != 2 ]]; do
-  echo "Tapez '1' pour utiliser le Bootstrap normal ou '2' pour utiliser React Bootstrap"
+if [[ $bootstrap == "y" ]]; then
+  echo "Bootstrap normal (1) ou React Bootstrap (2) ?"
   read styleBootstrap
-done
+  while [[ $styleBootstrap != 1 && $styleBootstrap != 2 ]]; do
+    echo "Tapez '1' pour utiliser le Bootstrap normal ou '2' pour utiliser React Bootstrap"
+    read styleBootstrap
+  done
+fi
 
 # Tailwind
 echo "Besoin de TailWind ? (y)"
@@ -391,7 +393,8 @@ if [[ $bootstrap == "y" ]]; then
     esac
 
   elif
-    [[ $structureSass == "2" ]]; then
+    [[ $structureSass == "2" ]]
+  then
 
     case $styleType in
     a)
