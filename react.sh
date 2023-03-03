@@ -52,7 +52,7 @@ read reactIcons
 echo "Besoin de Bootstrap ? (y)"
 read bootstrap
 # Style Bootstrap
-if [[ bootstrap == "y" ]]; then
+if [[ $bootstrap == "y" ]]; then
   echo "Bootstrap normal (1) ou React Bootstrap (2) ?"
   read styleBootstrap
   while [[ $styleBootstrap != 1 && $styleBootstrap != 2 ]]; do
