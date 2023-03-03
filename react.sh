@@ -268,7 +268,8 @@ if [[ $structureSass == "1" ]]; then
     ;;
   esac
 elif [[ $structureSass == "2" ]]; then
-  mkdir -p ./src/{sass/modules/},pages/
+  mkdir -p ./src/sass/modules/
+  mkdir -p ./src/pages/
   touch ./src/{App.jsx,index.jsx} ./src/components/$compName.jsx
   npm i sass --save-dev
   case $styleType in
