@@ -83,7 +83,7 @@ cd $appName
 rm -rf ./src/*
 
 # Ajout des fichiers indispensables
-mkdir -p ./src/components/
+mkdir -p ./src/{components/,assets/{images/,fonts/,data/,audios/,videos/}}
 
 # Ajouter des fichiers App et index.sass
 function touchSass {
@@ -332,7 +332,6 @@ rm -rf public/*
 
 # Creation de l'index.html dans public
 touch ./public/index.html
-mkdir -p ./public/assets/{images/,fonts/,data/,audios/,videos/}
 
 #Texte dans l'index
 function textHTML {
