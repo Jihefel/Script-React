@@ -73,6 +73,10 @@ read reactRouter
 echo "Besoin de Axios ? (y)"
 read axios
 
+# Redux
+echo "Besoin de Redux ? (y)"
+read redux
+
 # create-react-app
 npx create-react-app $appName
 
@@ -576,6 +580,86 @@ fi
 if [[ $axios == "y" ]]; then
   npm i axios
 fi
+
+# Redux
+
+if [[ $redux == "y" ]]; then
+  npm install @reduxjs/toolkit react-redux
+
+  mkdir -p ./src/app/
+  mv ./src/components/ ./src/features/
+  mkdir -p ./src/features/$compName_lowercase/
+  mv ./src/features/$compName.jsx ./src/features/$compName_lowercase/
+  sed -i "s/components\//features\/${compName_lowercase}\//" ./src/App.jsx
+  touch ./src/features/$compName_lowercase/${compName_lowercase}Slice.js ./src/app/store.js
+
+  # store
+function setStore {
+  cat <<EOF
+import { configureStore } from "@reduxjs/toolkit";
+import ${compName_lowercase}Slice from "../features/$compName_lowercase/${compName_lowercase}Slice.js";
+
+export const store = configureStore({
+  reducer: {
+      ${compName_lowercase}: ${compName_lowercase}Slice
+  }
+})
+EOF
+}
+setStore >> ./src/app/store.js
+
+  # Index
+sed -i "5i\import { store } from './app/store';" ./src/index.jsx
+sed -i "6i\import { Provider } from 'react-redux';" ./src/index.jsx
+sed -i "10i\<Provider store={store}>" ./src/index.jsx
+sed -i "14i\</Provider>" ./src/index.jsx
+
+  # ..Slice.js
+function setSlice {
+  cat <<EOF
+import { createSlice } from "@reduxjs/toolkit";
+
+export const ${compName_lowercase}Slice = createSlice ({
+  name: '$compName_lowercase',
+  initialState: {
+    value: 0
+  },
+  // A CHANGER SELON LE PROJET
+  reducers : {
+    increment: (state) => {state.value += 1},
+    decrement: (state) => {state.value -= 1}
+  }
+})
+
+export const {increment, decrement} = ${compName_lowercase}Slice.actions
+export default ${compName_lowercase}Slice.reducer
+EOF
+}
+setSlice >> ./src/features/$compName_lowercase/${compName_lowercase}Slice.js
+
+touch ./src/selector-dispatch-a-utiliser.js
+
+function setReduxHooks {
+  cat <<EOF
+// UTILISEZ LE CONTENU DE CE FICHIER LA OÙ VOUS EN AVEZ BESOIN ET SUPPRIMEZ LE QUAND TERMINE
+import { increment, decrement } from /*CHEMIN RELATIF DU SLICE A DETERMINER*/;
+import { useSelector, useDispatch } from 'react-redux';
+
+const nomADefinir = useSelector((state) => state.$compName_lowercase.value)
+const dispatch = useDispatch()
+
+const fonctionARenommer = () => {
+  dispatch(increment())
+  dispatch(decrement())
+}
+
+EOF
+}
+setReduxHooks >> ./src/selector-dispatch-a-utiliser.js
+
+fi
+
+
 
 # Lancement de l'app
 echo "LANCEMENT DE L'APP REACT. BON TRAVAIL !"
