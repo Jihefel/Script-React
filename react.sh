@@ -590,14 +590,14 @@ if [[ $redux == "y" ]]; then
   mv ./src/components/ ./src/features/
   mkdir -p ./src/features/$compName_lowercase/
   mv ./src/features/$compName.jsx ./src/features/$compName_lowercase/
-  sed -i "s/components\//features\/${compName_lowercase}\//" ./src/App.jsx
+  sed -i "s/components\//features\//" ./src/App.jsx
   touch ./src/features/$compName_lowercase/${compName_lowercase}Slice.js ./src/app/store.js
 
   # store
 function setStore {
   cat <<EOF
 import { configureStore } from "@reduxjs/toolkit";
-import ${compName_lowercase}Slice from "../features/$compName_lowercase/${compName_lowercase}Slice.js";
+import ${compName_lowercase}Slice from "../features/$compName/${compName_lowercase}Slice.js";
 
 export const store = configureStore({
   reducer: {
